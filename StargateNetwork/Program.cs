@@ -30,12 +30,6 @@ namespace StargateNetwork
                     Console.WriteLine("Received: " + type + " from client");
                     Console.WriteLine("Client id = " + ID);
                     
-                    //start database connection
-                    var db = new SQLiteAsyncConnection("stargates.db");
-                    var stargatesdb = db.Table<Stargate>().ToListAsync(); 
-                    stargatesdb.Wait();
-                    
-                    
                     //message handler
                     switch (type)
                     {
@@ -46,17 +40,14 @@ namespace StargateNetwork
                             Console.WriteLine("New address request: '" + requestedAddress + "'");
                             
                             //check db if any gates already have the address
-                            bool addrTaken = false;
-                            foreach (var dbStargate in stargatesdb.Result)
-                            {
-                                if (dbStargate.gate_address == requestedAddress)
-                                {
-                                    addrTaken = true;
-                                    break;
-                                } 
-                            }
+                            var db = new SQLiteAsyncConnection("stargates.db");
+
+                            string query =  "SELECT * FROM Stargate WHERE gate_address='" + requestedAddress + "'";
+                            var results = db.QueryAsync<Stargate>(query);
+                            results.Wait();
                             
-                            if (addrTaken)
+                            
+                            if (results.Result.Any())
                             {
                                 Console.WriteLine("Address in use!");
                                 Send("403");
@@ -118,6 +109,7 @@ namespace StargateNetwork
                         {
                             Console.WriteLine("Updated requested");
                             
+                            /*
                             //find gate that has same ID
                             bool found = false;
                             Stargate currentStargate = null;
@@ -129,7 +121,7 @@ namespace StargateNetwork
                                     currentStargate = dbStargate;
                                 }
                             }
-
+                                
                             if (!found)
                             {
                                 break;
@@ -137,7 +129,7 @@ namespace StargateNetwork
                             
                             //update database
                             
-                            
+                            */
                             break;
                         }
                         
