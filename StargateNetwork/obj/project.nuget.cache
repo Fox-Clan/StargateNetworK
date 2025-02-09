@@ -1,0 +1,41 @@
+{
+  "version": 2,
+  "dgSpecHash": "dcA4sO4PYt8=",
+  "success": true,
+  "projectFilePath": "/home/gup/RiderProjects/StargateNetwork/StargateNetwork/StargateNetwork.csproj",
+  "expectedPackageFiles": [
+    "/home/gup/.nuget/packages/microsoft.data.sqlite/9.0.1/microsoft.data.sqlite.9.0.1.nupkg.sha512",
+    "/home/gup/.nuget/packages/microsoft.data.sqlite.core/9.0.1/microsoft.data.sqlite.core.9.0.1.nupkg.sha512",
+    "/home/gup/.nuget/packages/microsoft.entityframeworkcore/9.0.1/microsoft.entityframeworkcore.9.0.1.nupkg.sha512",
+    "/home/gup/.nuget/packages/microsoft.entityframeworkcore.abstractions/9.0.1/microsoft.entityframeworkcore.abstractions.9.0.1.nupkg.sha512",
+    "/home/gup/.nuget/packages/microsoft.entityframeworkcore.analyzers/9.0.1/microsoft.entityframeworkcore.analyzers.9.0.1.nupkg.sha512",
+    "/home/gup/.nuget/packages/microsoft.extensions.caching.abstractions/9.0.1/microsoft.extensions.caching.abstractions.9.0.1.nupkg.sha512",
+    "/home/gup/.nuget/packages/microsoft.extensions.caching.memory/9.0.1/microsoft.extensions.caching.memory.9.0.1.nupkg.sha512",
+    "/home/gup/.nuget/packages/microsoft.extensions.dependencyinjection/9.0.1/microsoft.extensions.dependencyinjection.9.0.1.nupkg.sha512",
+    "/home/gup/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/9.0.1/microsoft.extensions.dependencyinjection.abstractions.9.0.1.nupkg.sha512",
+    "/home/gup/.nuget/packages/microsoft.extensions.logging/9.0.1/microsoft.extensions.logging.9.0.1.nupkg.sha512",
+    "/home/gup/.nuget/packages/microsoft.extensions.logging.abstractions/9.0.1/microsoft.extensions.logging.abstractions.9.0.1.nupkg.sha512",
+    "/home/gup/.nuget/packages/microsoft.extensions.options/9.0.1/microsoft.extensions.options.9.0.1.nupkg.sha512",
+    "/home/gup/.nuget/packages/microsoft.extensions.primitives/9.0.1/microsoft.extensions.primitives.9.0.1.nupkg.sha512",
+    "/home/gup/.nuget/packages/newtonsoft.json/13.0.3/newtonsoft.json.13.0.3.nupkg.sha512",
+    "/home/gup/.nuget/packages/sqlitepclraw.bundle_e_sqlite3/2.1.10/sqlitepclraw.bundle_e_sqlite3.2.1.10.nupkg.sha512",
+    "/home/gup/.nuget/packages/sqlitepclraw.core/2.1.10/sqlitepclraw.core.2.1.10.nupkg.sha512",
+    "/home/gup/.nuget/packages/sqlitepclraw.lib.e_sqlite3/2.1.10/sqlitepclraw.lib.e_sqlite3.2.1.10.nupkg.sha512",
+    "/home/gup/.nuget/packages/sqlitepclraw.provider.e_sqlite3/2.1.10/sqlitepclraw.provider.e_sqlite3.2.1.10.nupkg.sha512",
+    "/home/gup/.nuget/packages/system.memory/4.5.3/system.memory.4.5.3.nupkg.sha512",
+    "/home/gup/.nuget/packages/websocketsharp/1.0.3-rc11/websocketsharp.1.0.3-rc11.nupkg.sha512",
+    "/home/gup/.nuget/packages/microsoft.aspnetcore.app.ref/9.0.1/microsoft.aspnetcore.app.ref.9.0.1.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'WebSocketSharp 1.0.3-rc11' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net9.0'. This package may not be fully compatible with your project.",
+      "libraryId": "WebSocketSharp",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    }
+  ]
+}
