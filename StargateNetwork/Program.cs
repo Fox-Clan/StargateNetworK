@@ -109,27 +109,17 @@ namespace StargateNetwork
                         {
                             Console.WriteLine("Updated requested");
                             
-                            /*
-                            //find gate that has same ID
-                            bool found = false;
-                            Stargate currentStargate = null;
-                            foreach (var dbStargate in stargatesdb.Result)
-                            {
-                                if (dbStargate.id == ID)
-                                {
-                                    found = true;
-                                    currentStargate = dbStargate;
-                                }
-                            }
-                                
-                            if (!found)
-                            {
-                                break;
-                            }
+                            //find gate and update record
+                            var db = new SQLiteAsyncConnection("stargates.db");
+                            string query = "UPDATE Stargate SET " +
+                                "active_users='" + message.currentUsers +"', " +
+                                "max_users='" + message.MaxUsers + "', " +
+                                "gate_status='" + message.gate_status + "' " +
+                                "WHERE gate_address='" + message.gate_address + "'";
+                            var results = db.QueryAsync<Stargate>(query);
+                            results.Wait();
+                            Console.WriteLine("Updated record");
                             
-                            //update database
-                            
-                            */
                             break;
                         }
                         
