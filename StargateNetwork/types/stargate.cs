@@ -21,6 +21,7 @@ public class Stargate
     public string session_url { get; set; }
     public int update_date { get; set; }
     public int creation_date { get; set; }
+    public string dialed_gate_id { get; set; }
 };
 
 
