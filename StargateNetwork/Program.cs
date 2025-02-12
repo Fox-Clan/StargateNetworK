@@ -21,10 +21,26 @@ namespace StargateNetwork
             {
                 Console.WriteLine("Received message from client :" + wibi.Data);
                 
-                //Deserialize the incoming message
+                bool doNormal = true;
                 string type = "null";
+                
+                //check for IDC. i have no idea why its writenn like this 
+                if (wibi.Data.Contains("IDC:"))
+                {
+                    using (var db = new StargateContext())
+                    {
+                        Console.WriteLine("IDC SENT: " + wibi.Data.Substring(4));
+                        Stargate gate = await StargateTools.FindGateById(ID, db);
+                        Sessions.SendTo(wibi.Data, gate.dialed_gate_id);
+                        return;
+                    }
+                }
+
+                
+                //Deserialize the incoming message
                 dynamic message = JsonConvert.DeserializeObject(wibi.Data);
                 type = message.type;
+                
 
                 if (type != "null")
                 {
@@ -296,9 +312,17 @@ namespace StargateNetwork
                             
                             using (var db = new StargateContext())
                             {
+                                //set iris state in database // 
                                 var gate = await StargateTools.FindGateById(ID, db);
                                 gate.iris_state = message.iris_state;
                                 await db.SaveChangesAsync();
+
+                                try
+                                {
+                                    Console.WriteLine("Sending iris state to dialing gate");
+                                    Stargate incomingGate = await StargateTools.FindGateByDialedId(gate.id, db);
+                                    Sessions.SendTo("IrisUpdate:" + gate.iris_state, incomingGate.id);
+                                } finally{}
                             }   
                             
                             break;

@@ -37,4 +37,21 @@ public class StargateTools
         return gate;
     }
     
+    public static async Task<Stargate> FindGateByDialedId(string id, StargateContext ctx)
+    {
+        var gate = await ctx.Stargates
+            .SingleOrDefaultAsync(b => b.dialed_gate_id == id);
+
+        if (gate == null)
+        {
+            Stargate nullgate = new Stargate()
+            {
+                id = "NULL"
+            };
+            return nullgate;
+        }
+        
+        return gate;
+    }
+    
 }
