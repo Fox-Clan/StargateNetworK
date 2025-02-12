@@ -112,8 +112,126 @@ namespace StargateNetwork
                         //used to make sure the dialed address is valid
                         case "validateAddress":
                         {
-                            //TODO
-                            break;
+                            Console.WriteLine("Address validation Requested");
+                            
+                             string requestedAddress = message.gate_address;
+                            
+                            //query database for requested gate
+                            using (var db = new StargateContext())
+                            {
+                                var requestedGate = await StargateTools.FindGateByAddress(requestedAddress, db);
+
+                                var currentGate = await StargateTools.FindGateById(ID, db);
+
+                                //check if requested gate exists
+                                if (requestedGate.id == "NULL")
+                                {
+                                    Console.WriteLine("No stargate found");
+                                    Send("CSDialCheck:404");
+                                    break;
+                                }
+
+                                //check if requested address is of valid length (WHYYYYY IS THIS A SEPRORATE FUNCTION FOR UNIVERSE GATES OTHER GATES DO THIS IN GAME!!!!!!
+                                if (requestedAddress.Length < 6)
+                                {
+                                    Console.WriteLine("Address is too short");
+                                    Send("CSValidCheck:400");
+                                }
+
+                                //check if gate is trying to dial itself
+                                if (requestedGate.gate_address == currentGate.gate_address)
+                                {
+                                    Console.WriteLine("Gate is trying to dial itself!!!");
+                                    Send("CSDialCheck:403");
+                                    break;
+                                }
+
+                                //check if destination gate is busy
+                                if (requestedGate.gate_status != "IDLE")
+                                {
+                                    Console.WriteLine("Gate is busy");
+                                    Send("CSValidCheck:403");
+                                    break;
+                                }
+
+                                //find chev count to send to requested gate
+                                string gate_address = message.gate_address;
+                                string currentGateCode = currentGate.gate_code;
+                                int chevCount = 0;
+
+                                switch (gate_address.Length)
+                                {
+                                    case 6:
+                                    {
+                                        if (requestedGate.gate_code == currentGateCode)
+                                        {
+                                            chevCount = 6;
+                                        }
+                                        else
+                                        {
+                                            chevCount = -1;
+                                        }
+
+                                        break;
+                                    }
+
+                                    case 7:
+                                    {
+                                        if (gate_address.Substring(7, 7) == currentGateCode.Substring(7, 7))
+                                        {
+                                            chevCount = 7;
+                                        }
+                                        else
+                                        {
+                                            chevCount = -1;
+                                        }
+
+                                        break;
+                                    }
+
+                                    case 8:
+                                    {
+                                        if (gate_address.Substring(7, 8) == currentGateCode.Substring(7, 8))
+                                        {
+                                            chevCount = 9;
+                                        }
+                                        else
+                                        {
+                                            chevCount = -1;
+                                        }
+
+                                        break;
+                                    }
+                                }
+
+                                if (chevCount == -1)
+                                {
+                                    Console.WriteLine("Invalid gate code!");
+                                    Send("CSDialCheck:302");
+                                    break;
+                                }
+
+                                //check if destination is full
+                                if (requestedGate.active_users >= requestedGate.max_users)
+                                {
+                                    Console.WriteLine("Max users reached on requested session!");
+                                    Send("CSDialCheck:403");
+                                    break;
+                                }
+
+                                //update gate states on database
+                                requestedGate.gate_status = "INCOMING";
+
+                                currentGate.gate_status = "OPEN";
+                                currentGate.dialed_gate_id = requestedGate.id;
+
+                                await db.SaveChangesAsync();
+
+                                //dial gate
+                                Send("CSDialCheck:200");
+
+                                break;
+                            }
                         }
                         
                         //used to make a request to the server to dial a remote gate
@@ -147,12 +265,14 @@ namespace StargateNetwork
                                 }
                                 
                                 //check if destination gate is busy
+                                /*
                                 if (requestedGate.gate_status != "IDLE")
                                 {
                                     Console.WriteLine("Gate is busy");
                                     Send("CSValidCheck:403");
                                     break;
                                 }
+                                */
                                 
                                 //find chev count to send to requested gate
                                 string gate_address = message.gate_address;
