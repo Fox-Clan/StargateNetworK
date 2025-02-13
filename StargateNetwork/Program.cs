@@ -114,7 +114,15 @@ namespace StargateNetwork
                         {
                             Console.WriteLine("Address validation Requested");
                             
-                             string requestedAddress = message.gate_address;
+                            string requestedAddress_full = message.gate_address;
+                            if (requestedAddress_full.Length < 6)
+                            {
+                                Console.WriteLine("Address is too short");
+                                Send("CSDialCheck:404");
+                                break;
+                            }
+                            
+                            string requestedAddress = requestedAddress_full.Substring(0,6);
                             
                             //query database for requested gate
                             using (var db = new StargateContext())
@@ -127,7 +135,7 @@ namespace StargateNetwork
                                 if (requestedGate.id == "NULL")
                                 {
                                     Console.WriteLine("No stargate found");
-                                    Send("CSDialCheck:404");
+                                    Send("CSValidCheck:404");
                                     break;
                                 }
 
@@ -142,7 +150,7 @@ namespace StargateNetwork
                                 if (requestedGate.gate_address == currentGate.gate_address)
                                 {
                                     Console.WriteLine("Gate is trying to dial itself!!!");
-                                    Send("CSDialCheck:403");
+                                    Send("CSValidCheck:403");
                                     break;
                                 }
 
@@ -150,20 +158,21 @@ namespace StargateNetwork
                                 if (requestedGate.gate_status != "IDLE")
                                 {
                                     Console.WriteLine("Gate is busy");
+                                    Console.WriteLine("Gate status: " + requestedGate.gate_status);
                                     Send("CSValidCheck:403");
                                     break;
                                 }
 
                                 //find chev count to send to requested gate
-                                string gate_address = message.gate_address;
                                 string currentGateCode = currentGate.gate_code;
+                                string requestedGateCode = requestedGate.gate_code;
                                 int chevCount = 0;
 
-                                switch (gate_address.Length)
+                                switch (requestedAddress_full.Length)
                                 {
                                     case 6:
                                     {
-                                        if (requestedGate.gate_code == currentGateCode)
+                                        if (requestedGateCode == currentGateCode)
                                         {
                                             chevCount = 6;
                                         }
@@ -177,7 +186,7 @@ namespace StargateNetwork
 
                                     case 7:
                                     {
-                                        if (gate_address.Substring(7, 7) == currentGateCode.Substring(7, 7))
+                                        if (requestedGateCode.Substring(0,1) == requestedAddress_full.Substring(6, 1) && requestedGateCode.Substring(0,1) != "U" && currentGateCode.Substring(0,1) != "U")
                                         {
                                             chevCount = 7;
                                         }
@@ -191,9 +200,9 @@ namespace StargateNetwork
 
                                     case 8:
                                     {
-                                        if (gate_address.Substring(7, 8) == currentGateCode.Substring(7, 8))
+                                        if (requestedGate.gate_code == requestedAddress_full.Substring(6, 2))
                                         {
-                                            chevCount = 9;
+                                            chevCount = 8;
                                         }
                                         else
                                         {
@@ -207,7 +216,7 @@ namespace StargateNetwork
                                 if (chevCount == -1)
                                 {
                                     Console.WriteLine("Invalid gate code!");
-                                    Send("CSDialCheck:302");
+                                    Send("CSValidCheck:302");
                                     break;
                                 }
 
@@ -215,20 +224,13 @@ namespace StargateNetwork
                                 if (requestedGate.active_users >= requestedGate.max_users)
                                 {
                                     Console.WriteLine("Max users reached on requested session!");
-                                    Send("CSDialCheck:403");
+                                    Send("CSValidCheck:403");
                                     break;
                                 }
 
-                                //update gate states on database
-                                requestedGate.gate_status = "INCOMING";
-
-                                currentGate.gate_status = "OPEN";
-                                currentGate.dialed_gate_id = requestedGate.id;
-
-                                await db.SaveChangesAsync();
-
                                 //dial gate
-                                Send("CSDialCheck:200");
+                                Send("CSValidCheck:200");
+                                Console.Write("Address validated!");
 
                                 break;
                             }
@@ -239,7 +241,15 @@ namespace StargateNetwork
                         {
                             Console.WriteLine("Dial Requested");
                             
-                             string requestedAddress = message.gate_address;
+                            string requestedAddress_full = message.gate_address;
+                            if (requestedAddress_full.Length < 6)
+                            {
+                                Console.WriteLine("Address is too short");
+                                Send("CSDialCheck:404");
+                                break;
+                            }
+                            
+                            string requestedAddress = requestedAddress_full.Substring(0,6);
                             
                             //query database for requested gate
                             using (var db = new StargateContext())
@@ -265,25 +275,25 @@ namespace StargateNetwork
                                 }
                                 
                                 //check if destination gate is busy
-                                /*
                                 if (requestedGate.gate_status != "IDLE")
                                 {
                                     Console.WriteLine("Gate is busy");
+                                    Console.WriteLine("Gate status: " + requestedGate.gate_status);
                                     Send("CSValidCheck:403");
                                     break;
                                 }
-                                */
+                                
                                 
                                 //find chev count to send to requested gate
-                                string gate_address = message.gate_address;
                                 string currentGateCode = currentGate.gate_code;
+                                string requestedGateCode = requestedGate.gate_code;
                                 int chevCount = 0;
-                            
-                                switch(gate_address.Length)
+
+                                switch (requestedAddress_full.Length)
                                 {
                                     case 6:
                                     {
-                                        if (requestedGate.gate_code == currentGateCode)
+                                        if (requestedGateCode == currentGateCode)
                                         {
                                             chevCount = 6;
                                         }
@@ -291,13 +301,13 @@ namespace StargateNetwork
                                         {
                                             chevCount = -1;
                                         }
-                                    
+
                                         break;
                                     }
 
                                     case 7:
                                     {
-                                        if (gate_address.Substring(7,7) == currentGateCode.Substring(7,7))
+                                        if (requestedGateCode.Substring(0,1) == requestedAddress_full.Substring(6, 1) && requestedGateCode.Substring(0,1) != "U" && currentGateCode.Substring(0,1) != "U")
                                         {
                                             chevCount = 7;
                                         }
@@ -305,21 +315,21 @@ namespace StargateNetwork
                                         {
                                             chevCount = -1;
                                         }
-                                    
+
                                         break;
                                     }
 
                                     case 8:
                                     {
-                                        if (gate_address.Substring(7,8) == currentGateCode.Substring(7,8))
+                                        if (requestedGate.gate_code == requestedAddress_full.Substring(6, 2))
                                         {
-                                            chevCount = 9;
+                                            chevCount = 8;
                                         }
                                         else
                                         {
                                             chevCount = -1;
                                         }
-                                    
+
                                         break;
                                     }
                                 }

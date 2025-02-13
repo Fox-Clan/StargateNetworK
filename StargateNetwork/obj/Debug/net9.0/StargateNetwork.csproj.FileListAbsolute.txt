@@ -137,3 +137,4 @@
 /home/gup/RiderProjects/StargateNetwork/StargateNetwork/bin/Debug/net9.0/zh-Hans/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 /home/gup/RiderProjects/StargateNetwork/StargateNetwork/bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 /home/gup/RiderProjects/StargateNetwork/StargateNetwork/bin/Debug/net9.0/Microsoft.EntityFrameworkCore.Sqlite.dll
+/home/gup/RiderProjects/StargateNetwork/StargateNetwork/obj/Debug/net9.0/StargateNetwork.sourcelink.json
