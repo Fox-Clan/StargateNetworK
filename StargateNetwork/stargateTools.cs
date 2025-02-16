@@ -53,5 +53,29 @@ public class StargateTools
         
         return gate;
     }
-    
+
+    public static List<Stargate> FindAllGates(StargateContext ctx, bool onlyNonPersistent)
+    {
+        List<Stargate> gates = new List<Stargate>();
+        
+        if (onlyNonPersistent)
+        {
+            gates = ctx.Stargates
+                .Where(b => b.is_persistent == false)
+                .ToList();
+        }
+        else
+        {
+            gates = ctx.Stargates.ToList();
+        }
+        
+        return gates;
+    }
+
+    public static void RemoveGate(Stargate gate, StargateContext ctx)
+    {
+        ctx.Remove(gate);
+        Console.WriteLine("Removing gate: " + gate.id);
+    }
+
 }

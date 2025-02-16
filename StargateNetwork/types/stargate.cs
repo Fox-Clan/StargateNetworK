@@ -36,5 +36,6 @@ public class Stargate
     public int update_date { get; set; }
     public int creation_date { get; set; }
     public string dialed_gate_id { get; set; }
+    public bool is_persistent { get; set; }
 };
 

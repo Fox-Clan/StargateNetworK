@@ -2,6 +2,76 @@
   "version": 3,
   "targets": {
     "net9.0": {
+      "Bunkum/4.8.1": {
+        "type": "package",
+        "dependencies": {
+          "Bunkum.Listener": "4.8.1",
+          "EasyHotReload": "1.0.0",
+          "JetBrains.Annotations": "2024.2.0",
+          "Newtonsoft.Json": "13.0.3",
+          "NotEnoughLogs": "2.0.3"
+        },
+        "compile": {
+          "lib/net8.0/Bunkum.Analyzers.dll": {},
+          "lib/net8.0/Bunkum.Core.dll": {
+            "related": ".xml"
+          },
+          "lib/net8.0/Bunkum.Listener.dll": {}
+        },
+        "runtime": {
+          "lib/net8.0/Bunkum.Analyzers.dll": {},
+          "lib/net8.0/Bunkum.Core.dll": {
+            "related": ".xml"
+          },
+          "lib/net8.0/Bunkum.Listener.dll": {}
+        }
+      },
+      "Bunkum.Listener/4.8.1": {
+        "type": "package",
+        "dependencies": {
+          "NotEnoughLogs": "2.0.3"
+        },
+        "compile": {
+          "lib/net8.0/Bunkum.Listener.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Bunkum.Listener.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Bunkum.Protocols.Http/4.8.1": {
+        "type": "package",
+        "dependencies": {
+          "Bunkum": "4.8.1",
+          "Bunkum.Listener": "4.8.1"
+        },
+        "compile": {
+          "lib/net8.0/Bunkum.Core.dll": {},
+          "lib/net8.0/Bunkum.Listener.dll": {},
+          "lib/net8.0/Bunkum.Protocols.Http.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Bunkum.Core.dll": {},
+          "lib/net8.0/Bunkum.Listener.dll": {},
+          "lib/net8.0/Bunkum.Protocols.Http.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "EasyHotReload/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net7.0/EasyHotReload.dll": {}
+        },
+        "runtime": {
+          "lib/net7.0/EasyHotReload.dll": {}
+        }
+      },
       "Humanizer.Core/2.14.1": {
         "type": "package",
         "compile": {
@@ -12,6 +82,19 @@
         "runtime": {
           "lib/net6.0/Humanizer.dll": {
             "related": ".xml"
+          }
+        }
+      },
+      "JetBrains.Annotations/2024.2.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/JetBrains.Annotations.dll": {
+            "related": ".deps.json;.xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/JetBrains.Annotations.dll": {
+            "related": ".deps.json;.xml"
           }
         }
       },
@@ -738,6 +821,15 @@
           }
         }
       },
+      "NotEnoughLogs/2.0.3": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.1/NotEnoughLogs.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/NotEnoughLogs.dll": {}
+        }
+      },
       "SQLitePCLRaw.bundle_e_sqlite3/2.1.10": {
         "type": "package",
         "dependencies": {
@@ -1119,6 +1211,65 @@
     }
   },
   "libraries": {
+    "Bunkum/4.8.1": {
+      "sha512": "ilYvtnu2Ju+r3iP8pA1Yd+mdgEO1GhiMvOmRE2JUwaiBsGrU+q5oE6fEYIaV7Pj2sV8Yn+e8Tom8JI212Ac3Kw==",
+      "type": "package",
+      "path": "bunkum/4.8.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "bunkum.4.8.1.nupkg.sha512",
+        "bunkum.nuspec",
+        "lib/net8.0/Bunkum.Analyzers.dll",
+        "lib/net8.0/Bunkum.Core.dll",
+        "lib/net8.0/Bunkum.Core.xml",
+        "lib/net8.0/Bunkum.Listener.dll"
+      ]
+    },
+    "Bunkum.Listener/4.8.1": {
+      "sha512": "F2iPCqT0zUNAK80QTSEcb0M7KZnv5N+YqewdRCpF7CiL9v/NrDJcvA5RC+35fNIKTGBVyliVhjEyzGdeCs+PsA==",
+      "type": "package",
+      "path": "bunkum.listener/4.8.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "bunkum.listener.4.8.1.nupkg.sha512",
+        "bunkum.listener.nuspec",
+        "lib/net8.0/Bunkum.Listener.dll",
+        "lib/net8.0/Bunkum.Listener.xml"
+      ]
+    },
+    "Bunkum.Protocols.Http/4.8.1": {
+      "sha512": "L4vqSBeIqPmBH+L8+CE1ozKh1CbligzT/oZio1Q1Fbznixn44c7GMdubuvpMaslJbe7IQUUK/ia81JyyeNJ92g==",
+      "type": "package",
+      "path": "bunkum.protocols.http/4.8.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "bunkum.protocols.http.4.8.1.nupkg.sha512",
+        "bunkum.protocols.http.nuspec",
+        "lib/net8.0/Bunkum.Core.dll",
+        "lib/net8.0/Bunkum.Listener.dll",
+        "lib/net8.0/Bunkum.Protocols.Http.dll",
+        "lib/net8.0/Bunkum.Protocols.Http.xml"
+      ]
+    },
+    "EasyHotReload/1.0.0": {
+      "sha512": "uyAHhkt2TZKlZjLEjudH5CvNNkBfJEsUG/C6mwC7+QAXjZCYaDk2o9ZN/W7EUsSW/K6LFLLYnHPrhvimWx09WQ==",
+      "type": "package",
+      "path": "easyhotreload/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "easyhotreload.1.0.0.nupkg.sha512",
+        "easyhotreload.nuspec",
+        "lib/net7.0/EasyHotReload.dll"
+      ]
+    },
     "Humanizer.Core/2.14.1": {
       "sha512": "lQKvtaTDOXnoVJ20ibTuSIOf2i0uO0MPbDhd1jm238I+U/2ZnRENj0cktKZhtchBMtCUSRQ5v4xBCUbKNmyVMw==",
       "type": "package",
@@ -1135,6 +1286,29 @@
         "lib/netstandard2.0/Humanizer.dll",
         "lib/netstandard2.0/Humanizer.xml",
         "logo.png"
+      ]
+    },
+    "JetBrains.Annotations/2024.2.0": {
+      "sha512": "GNnqCFW/163p1fOehKx0CnAqjmpPrUSqrgfHM6qca+P+RN39C9rhlfZHQpJhxmQG/dkOYe/b3Z0P8b6Kv5m1qw==",
+      "type": "package",
+      "path": "jetbrains.annotations/2024.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "jetbrains.annotations.2024.2.0.nupkg.sha512",
+        "jetbrains.annotations.nuspec",
+        "lib/JetBrains.Annotations.2024.2.0.snupkg",
+        "lib/net20/JetBrains.Annotations.dll",
+        "lib/net20/JetBrains.Annotations.xml",
+        "lib/netstandard1.0/JetBrains.Annotations.deps.json",
+        "lib/netstandard1.0/JetBrains.Annotations.dll",
+        "lib/netstandard1.0/JetBrains.Annotations.xml",
+        "lib/netstandard2.0/JetBrains.Annotations.deps.json",
+        "lib/netstandard2.0/JetBrains.Annotations.dll",
+        "lib/netstandard2.0/JetBrains.Annotations.xml",
+        "lib/portable40-net40+sl5+win8+wp8+wpa81/JetBrains.Annotations.dll",
+        "lib/portable40-net40+sl5+win8+wp8+wpa81/JetBrains.Annotations.xml"
       ]
     },
     "Microsoft.Bcl.AsyncInterfaces/7.0.0": {
@@ -2650,6 +2824,18 @@
         "packageIcon.png"
       ]
     },
+    "NotEnoughLogs/2.0.3": {
+      "sha512": "fcEWua4L5dfhmnCH6cSx0XjKa2Tt/iyYx3pXAK0S+VbqSEsZirO0FsLT54aiH1dx8JDlPUXWa0T5jvWGL5krKQ==",
+      "type": "package",
+      "path": "notenoughlogs/2.0.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.1/NotEnoughLogs.dll",
+        "notenoughlogs.2.0.3.nupkg.sha512",
+        "notenoughlogs.nuspec"
+      ]
+    },
     "SQLitePCLRaw.bundle_e_sqlite3/2.1.10": {
       "sha512": "UxWuisvZ3uVcVOLJQv7urM/JiQH+v3TmaJc1BLKl5Dxfm/nTzTUrqswCqg/INiYLi61AXnHo1M1JPmPqqLnAdg==",
       "type": "package",
@@ -3167,6 +3353,8 @@
   },
   "projectFileDependencyGroups": {
     "net9.0": [
+      "Bunkum >= 4.8.1",
+      "Bunkum.Protocols.Http >= 4.8.1",
       "Microsoft.Data.Sqlite >= 9.0.1",
       "Microsoft.EntityFrameworkCore >= 9.0.1",
       "Microsoft.EntityFrameworkCore.Design >= 9.0.1",
@@ -3218,6 +3406,14 @@
       "net9.0": {
         "targetAlias": "net9.0",
         "dependencies": {
+          "Bunkum": {
+            "target": "Package",
+            "version": "[4.8.1, )"
+          },
+          "Bunkum.Protocols.Http": {
+            "target": "Package",
+            "version": "[4.8.1, )"
+          },
           "Microsoft.Data.Sqlite": {
             "target": "Package",
             "version": "[9.0.1, )"

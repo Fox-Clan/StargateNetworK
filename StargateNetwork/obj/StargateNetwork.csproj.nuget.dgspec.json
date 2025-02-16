@@ -44,6 +44,14 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "Bunkum": {
+              "target": "Package",
+              "version": "[4.8.1, )"
+            },
+            "Bunkum.Protocols.Http": {
+              "target": "Package",
+              "version": "[4.8.1, )"
+            },
             "Microsoft.Data.Sqlite": {
               "target": "Package",
               "version": "[9.0.1, )"

@@ -100,6 +100,7 @@ namespace StargateNetwork
                                     creation_date = UnixTimestamp(),
                                     update_date = UnixTimestamp(),
                                     dialed_gate_id = "",
+                                    is_persistent = false
                                 });
                                 await db.SaveChangesAsync();
                                 Send("{code: 200, message: \"Address accepted\" }");
@@ -482,19 +483,48 @@ namespace StargateNetwork
         {
             return (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
         }
+
+        static void cleanStaleDb()
+        {
+            while (true)
+            {
+                Console.WriteLine("Cleaning stale");
+            
+                using (var db = new StargateContext())
+                {
+                    var gates = StargateTools.FindAllGates(db, true);
+
+                    foreach (var gate in gates)
+                    {
+                        if (UnixTimestamp() - gate.update_date > 60)
+                        {
+                            StargateTools.RemoveGate(gate, db);
+                        
+                            Console.WriteLine("Cleaned stale stargate from database");
+                        }
+                    }
+                
+                    db.SaveChanges();
+                }
+            
+                Thread.Sleep(60000);
+            }
+
+        }
         
         
         static void Main(string[] args)
         {
-            //create stargate database
-            
-
-            
             //start websocket server
             WebSocketServer wssv = new WebSocketServer("ws://192.168.1.14:27015");
             wssv.AddWebSocketService<Echo>("/Echo");
             wssv.Start();
             Console.WriteLine("server started");
+            
+            //start database cleaner thread
+            Thread dbCleanThread = new Thread(cleanStaleDb);
+            dbCleanThread.Start();
+            Console.WriteLine("Db cleaner started");
         
             Console.ReadKey();
             wssv.Stop();
