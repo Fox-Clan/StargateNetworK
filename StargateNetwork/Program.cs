@@ -488,8 +488,6 @@ namespace StargateNetwork
         {
             while (true)
             {
-                Console.WriteLine("Cleaning stale");
-            
                 using (var db = new StargateContext())
                 {
                     var gates = StargateTools.FindAllGates(db, true);
@@ -515,11 +513,18 @@ namespace StargateNetwork
         
         static void Main(string[] args)
         {
+            //get env vars
+            string WS_URI = Environment.GetEnvironmentVariable("WS_URI");
+            if (string.IsNullOrEmpty(WS_URI))
+            {
+                WS_URI = "ws://192.168.1.14:27015";
+            }
+            
             //start websocket server
-            WebSocketServer wssv = new WebSocketServer("ws://192.168.1.14:27015");
+            WebSocketServer wssv = new WebSocketServer(WS_URI);
             wssv.AddWebSocketService<Echo>("/Echo");
             wssv.Start();
-            Console.WriteLine("server started");
+            Console.WriteLine("server started on: " + WS_URI);
             
             //start database cleaner thread
             Thread dbCleanThread = new Thread(cleanStaleDb);

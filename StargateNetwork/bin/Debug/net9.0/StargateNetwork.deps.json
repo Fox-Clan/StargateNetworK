@@ -8,6 +8,8 @@
     ".NETCoreApp,Version=v9.0": {
       "StargateNetwork/1.0.0": {
         "dependencies": {
+          "Bunkum": "4.8.1",
+          "Bunkum.Protocols.Http": "4.8.1",
           "Microsoft.Data.Sqlite": "9.0.1",
           "Microsoft.EntityFrameworkCore": "9.0.1",
           "Microsoft.EntityFrameworkCore.Design": "9.0.1",
@@ -19,11 +21,67 @@
           "StargateNetwork.dll": {}
         }
       },
+      "Bunkum/4.8.1": {
+        "dependencies": {
+          "Bunkum.Listener": "4.8.1",
+          "EasyHotReload": "1.0.0",
+          "JetBrains.Annotations": "2024.2.0",
+          "Newtonsoft.Json": "13.0.3",
+          "NotEnoughLogs": "2.0.3"
+        },
+        "runtime": {
+          "lib/net8.0/Bunkum.Analyzers.dll": {
+            "assemblyVersion": "4.8.1.0",
+            "fileVersion": "4.8.1.0"
+          },
+          "lib/net8.0/Bunkum.Core.dll": {
+            "assemblyVersion": "4.8.1.0",
+            "fileVersion": "4.8.1.0"
+          },
+          "lib/net8.0/Bunkum.Listener.dll": {
+            "assemblyVersion": "4.8.1.0",
+            "fileVersion": "4.8.1.0"
+          }
+        }
+      },
+      "Bunkum.Listener/4.8.1": {
+        "dependencies": {
+          "NotEnoughLogs": "2.0.3"
+        }
+      },
+      "Bunkum.Protocols.Http/4.8.1": {
+        "dependencies": {
+          "Bunkum": "4.8.1",
+          "Bunkum.Listener": "4.8.1"
+        },
+        "runtime": {
+          "lib/net8.0/Bunkum.Protocols.Http.dll": {
+            "assemblyVersion": "4.8.1.0",
+            "fileVersion": "4.8.1.0"
+          }
+        }
+      },
+      "EasyHotReload/1.0.0": {
+        "runtime": {
+          "lib/net7.0/EasyHotReload.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "Humanizer.Core/2.14.1": {
         "runtime": {
           "lib/net6.0/Humanizer.dll": {
             "assemblyVersion": "2.14.0.0",
             "fileVersion": "2.14.1.48190"
+          }
+        }
+      },
+      "JetBrains.Annotations/2024.2.0": {
+        "runtime": {
+          "lib/netstandard2.0/JetBrains.Annotations.dll": {
+            "assemblyVersion": "4242.42.42.42",
+            "fileVersion": "2024.2.0.0"
           }
         }
       },
@@ -558,6 +616,14 @@
           }
         }
       },
+      "NotEnoughLogs/2.0.3": {
+        "runtime": {
+          "lib/netstandard2.1/NotEnoughLogs.dll": {
+            "assemblyVersion": "2.0.3.0",
+            "fileVersion": "2.0.3.0"
+          }
+        }
+      },
       "SQLitePCLRaw.bundle_e_sqlite3/2.1.10": {
         "dependencies": {
           "SQLitePCLRaw.lib.e_sqlite3": "2.1.10",
@@ -796,12 +862,47 @@
       "serviceable": false,
       "sha512": ""
     },
+    "Bunkum/4.8.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ilYvtnu2Ju+r3iP8pA1Yd+mdgEO1GhiMvOmRE2JUwaiBsGrU+q5oE6fEYIaV7Pj2sV8Yn+e8Tom8JI212Ac3Kw==",
+      "path": "bunkum/4.8.1",
+      "hashPath": "bunkum.4.8.1.nupkg.sha512"
+    },
+    "Bunkum.Listener/4.8.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-F2iPCqT0zUNAK80QTSEcb0M7KZnv5N+YqewdRCpF7CiL9v/NrDJcvA5RC+35fNIKTGBVyliVhjEyzGdeCs+PsA==",
+      "path": "bunkum.listener/4.8.1",
+      "hashPath": "bunkum.listener.4.8.1.nupkg.sha512"
+    },
+    "Bunkum.Protocols.Http/4.8.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-L4vqSBeIqPmBH+L8+CE1ozKh1CbligzT/oZio1Q1Fbznixn44c7GMdubuvpMaslJbe7IQUUK/ia81JyyeNJ92g==",
+      "path": "bunkum.protocols.http/4.8.1",
+      "hashPath": "bunkum.protocols.http.4.8.1.nupkg.sha512"
+    },
+    "EasyHotReload/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-uyAHhkt2TZKlZjLEjudH5CvNNkBfJEsUG/C6mwC7+QAXjZCYaDk2o9ZN/W7EUsSW/K6LFLLYnHPrhvimWx09WQ==",
+      "path": "easyhotreload/1.0.0",
+      "hashPath": "easyhotreload.1.0.0.nupkg.sha512"
+    },
     "Humanizer.Core/2.14.1": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-lQKvtaTDOXnoVJ20ibTuSIOf2i0uO0MPbDhd1jm238I+U/2ZnRENj0cktKZhtchBMtCUSRQ5v4xBCUbKNmyVMw==",
       "path": "humanizer.core/2.14.1",
       "hashPath": "humanizer.core.2.14.1.nupkg.sha512"
+    },
+    "JetBrains.Annotations/2024.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-GNnqCFW/163p1fOehKx0CnAqjmpPrUSqrgfHM6qca+P+RN39C9rhlfZHQpJhxmQG/dkOYe/b3Z0P8b6Kv5m1qw==",
+      "path": "jetbrains.annotations/2024.2.0",
+      "hashPath": "jetbrains.annotations.2024.2.0.nupkg.sha512"
     },
     "Microsoft.Bcl.AsyncInterfaces/7.0.0": {
       "type": "package",
@@ -1012,6 +1113,13 @@
       "sha512": "sha512-HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ==",
       "path": "newtonsoft.json/13.0.3",
       "hashPath": "newtonsoft.json.13.0.3.nupkg.sha512"
+    },
+    "NotEnoughLogs/2.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fcEWua4L5dfhmnCH6cSx0XjKa2Tt/iyYx3pXAK0S+VbqSEsZirO0FsLT54aiH1dx8JDlPUXWa0T5jvWGL5krKQ==",
+      "path": "notenoughlogs/2.0.3",
+      "hashPath": "notenoughlogs.2.0.3.nupkg.sha512"
     },
     "SQLitePCLRaw.bundle_e_sqlite3/2.1.10": {
       "type": "package",

@@ -138,3 +138,10 @@
 /home/gup/RiderProjects/StargateNetwork/StargateNetwork/bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 /home/gup/RiderProjects/StargateNetwork/StargateNetwork/bin/Debug/net9.0/Microsoft.EntityFrameworkCore.Sqlite.dll
 /home/gup/RiderProjects/StargateNetwork/StargateNetwork/obj/Debug/net9.0/StargateNetwork.sourcelink.json
+/home/gup/RiderProjects/StargateNetwork/StargateNetwork/bin/Debug/net9.0/Bunkum.Analyzers.dll
+/home/gup/RiderProjects/StargateNetwork/StargateNetwork/bin/Debug/net9.0/Bunkum.Core.dll
+/home/gup/RiderProjects/StargateNetwork/StargateNetwork/bin/Debug/net9.0/Bunkum.Listener.dll
+/home/gup/RiderProjects/StargateNetwork/StargateNetwork/bin/Debug/net9.0/Bunkum.Protocols.Http.dll
+/home/gup/RiderProjects/StargateNetwork/StargateNetwork/bin/Debug/net9.0/EasyHotReload.dll
+/home/gup/RiderProjects/StargateNetwork/StargateNetwork/bin/Debug/net9.0/JetBrains.Annotations.dll
+/home/gup/RiderProjects/StargateNetwork/StargateNetwork/bin/Debug/net9.0/NotEnoughLogs.dll
