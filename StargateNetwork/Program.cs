@@ -284,6 +284,19 @@ namespace StargateNetwork
                                     break;
                                 }
                                 
+                                //if gate is persistent make sure the world is up and if not start it and wait for it to fully load //TODO
+                                if (requestedGate.is_persistent)
+                                {
+                                    /*
+                                    if (!(requestedGate.world_record == //function that returns true if the world is already up))
+                                    {
+                                        Console.WriteLine("Requested gate is in closed world. starting...")
+                                        //function that starts world
+                                        //waits for world to start
+                                    }
+                                    */
+                                }
+                                
                                 
                                 //find chev count to send to requested gate
                                 string currentGateCode = currentGate.gate_code;
