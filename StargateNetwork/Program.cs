@@ -507,7 +507,6 @@ namespace StargateNetwork
             
                 Thread.Sleep(60000);
             }
-
         }
         
         
@@ -525,6 +524,9 @@ namespace StargateNetwork
             wssv.AddWebSocketService<Echo>("/Echo");
             wssv.Start();
             Console.WriteLine("server started on: " + WS_URI);
+            
+            //start bunkum http server
+            BunKum.StartBunKum();
             
             //start database cleaner thread
             Thread dbCleanThread = new Thread(cleanStaleDb);
