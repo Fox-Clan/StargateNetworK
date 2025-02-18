@@ -30,17 +30,3 @@ public class BunKum
     }
 }
 
-public class GateEndpoints : EndpointGroup
-{
-    //returns gatelist for ingame applications
-    [HttpEndpoint("/gates", HttpMethods.Get, ContentType.Plaintext)]
-    public String GetGates(RequestContext context)
-    {
-        using (var db = new StargateContext())
-        {
-            var gates = StargateTools.FindAllGates(db, false);
-            string gateList = JsonConvert.SerializeObject(gates);
-            return gateList;
-        }
-    }
-}
