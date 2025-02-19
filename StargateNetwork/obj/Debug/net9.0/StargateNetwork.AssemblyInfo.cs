@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("StargateNetwork")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dac8efda2acd695f40bf0844ff7b9fc0ae0fce52")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c6944846596fe2967f931b28992bb477b33fc990")]
 [assembly: System.Reflection.AssemblyProductAttribute("StargateNetwork")]
 [assembly: System.Reflection.AssemblyTitleAttribute("StargateNetwork")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
