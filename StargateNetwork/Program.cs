@@ -1,14 +1,6 @@
-﻿using System.Diagnostics;
-using System.Net.WebSockets;
-using System.Runtime.Loader;
-using WebSocketSharp;
+﻿using WebSocketSharp;
 using WebSocketSharp.Server;
-using SQLite;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 
 namespace StargateNetwork
@@ -21,56 +13,71 @@ namespace StargateNetwork
             {
                 Console.WriteLine("Received message from client :" + wibi.Data);
                 
-                bool doNormal = true;
-                string type = "null";
-                
-                //check for IDC. i have no idea why its writenn like this 
-                if (wibi.Data.Contains("IDC:"))
+                //check for IDC
+                try
                 {
-                    using (var db = new StargateContext())
+                    if (wibi.Data.Contains("IDC:"))
                     {
-                        Console.WriteLine("IDC SENT: " + wibi.Data.Substring(4));
-                        Stargate gate = await StargateTools.FindGateById(ID, db);
-                        Sessions.SendTo(wibi.Data, gate.dialed_gate_id);
-                        return;
+                        using (var db = new StargateContext())
+                        {
+                            Console.WriteLine("IDC SENT: " + wibi.Data.Substring(4));
+                            Stargate gate = await StargateTools.FindGateById(ID, db);
+                            Sessions.SendTo(wibi.Data, gate.dialed_gate_id);
+                            return;
+                        }
                     }
                 }
-
-                
-                //Deserialize the incoming message
-                dynamic message = JsonConvert.DeserializeObject(wibi.Data);
-                type = message.type;
-                
-
-                if (type != "null")
+                catch (Exception e)
                 {
-                    Console.WriteLine("Received: " + type + " from client");
-                    Console.WriteLine("Client id = " + ID);
-                    
-                    //message handler
-                    switch (type)
+                    Console.WriteLine("Exception caught during IDC: " + e.Message);
+                }
+
+
+                //Deserialize the incoming message
+                string type;
+                dynamic? message = JsonConvert.DeserializeObject(wibi.Data);
+                if (message != null)
+                {
+                    type = message.type;
+                }
+                else
+                {
+                    Console.WriteLine("Failed to deserialize message. ignoring...");
+                    return;
+                }
+
+
+                Console.WriteLine("Received: " + type + " from client");
+                Console.WriteLine("Client id = " + ID);
+
+                //message handler
+                switch (type)
+                {
+                    //used when gate requests initial address during setup
+                    case "requestAddress":
                     {
-                        //used when gate requests initial address during setup
-                        case "requestAddress":
+                        try
                         {
-                            string requestedAddress = message.gate_address; //i need to do this because cs is being funny
+                            string requestedAddress =
+                                message.gate_address; //i need to do this because cs is being funny
                             Console.WriteLine("New address request: '" + requestedAddress + "'");
-                            
+
                             //check db if any gates already have the address
                             using (var db = new StargateContext())
                             {
                                 var gate = await StargateTools.FindGateByAddress(requestedAddress, db);
-                                
+
                                 if (gate.id != "NULL")
                                 {
                                     bool overRide = false;
-                                        
+
                                     if (UnixTimestamp() - gate.update_date > 60)
                                     {
                                         Console.WriteLine("database entry stale, overriding...");
                                         db.Remove(gate);
                                         overRide = true;
-                                    } else if (gate.id == ID)
+                                    }
+                                    else if (gate.id == ID)
                                     {
                                         Console.WriteLine("Gate already exists in database. Skipping...");
                                         break;
@@ -83,7 +90,7 @@ namespace StargateNetwork
                                         break;
                                     }
                                 }
-                                
+
                                 db.Add(new Stargate()
                                 {
                                     id = ID,
@@ -107,15 +114,24 @@ namespace StargateNetwork
                                 Send("{code: 200, message: \"Address accepted\" }");
                                 Console.WriteLine("Stargate added to database");
                             }
-                            
+
                             break;
                         }
-                        
-                        //used to make sure the dialed address is valid
-                        case "validateAddress":
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Exception caught during address request: " + e.Message);
+                            Send("403");
+                            break;
+                        }
+                    }
+
+                    //used to make sure the dialed address is valid
+                    case "validateAddress":
+                    {
+                        try
                         {
                             Console.WriteLine("Address validation Requested");
-                            
+
                             string requestedAddress_full = message.gate_address;
                             if (requestedAddress_full.Length < 6)
                             {
@@ -123,9 +139,9 @@ namespace StargateNetwork
                                 Send("CSDialCheck:404");
                                 break;
                             }
-                            
-                            string requestedAddress = requestedAddress_full.Substring(0,6);
-                            
+
+                            string requestedAddress = requestedAddress_full.Substring(0, 6);
+
                             //query database for requested gate
                             using (var db = new StargateContext())
                             {
@@ -188,7 +204,10 @@ namespace StargateNetwork
 
                                     case 7:
                                     {
-                                        if (requestedGateCode.Substring(0,1) == requestedAddress_full.Substring(6, 1) && requestedGateCode.Substring(0,1) != "U" && currentGateCode.Substring(0,1) != "U")
+                                        if (requestedGateCode.Substring(0, 1) ==
+                                            requestedAddress_full.Substring(6, 1) &&
+                                            requestedGateCode.Substring(0, 1) != "U" &&
+                                            currentGateCode.Substring(0, 1) != "U")
                                         {
                                             chevCount = 7;
                                         }
@@ -237,12 +256,21 @@ namespace StargateNetwork
                                 break;
                             }
                         }
-                        
-                        //used to make a request to the server to dial a remote gate
-                        case "dialRequest":
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Exception caught during address validation: " + e.Message);
+                            Send("CSValidCheck:403");
+                            break;
+                        }
+                    }
+
+                    //used to make a request to the server to dial a remote gate
+                    case "dialRequest":
+                    {
+                        try
                         {
                             Console.WriteLine("Dial Requested");
-                            
+
                             string requestedAddress_full = message.gate_address;
                             if (requestedAddress_full.Length < 6)
                             {
@@ -250,16 +278,16 @@ namespace StargateNetwork
                                 Send("CSDialCheck:404");
                                 break;
                             }
-                            
-                            string requestedAddress = requestedAddress_full.Substring(0,6);
-                            
+
+                            string requestedAddress = requestedAddress_full.Substring(0, 6);
+
                             //query database for requested gate
                             using (var db = new StargateContext())
                             {
-                                var requestedGate = await StargateTools.FindGateByAddress(requestedAddress, db); 
-                                
+                                var requestedGate = await StargateTools.FindGateByAddress(requestedAddress, db);
+
                                 var currentGate = await StargateTools.FindGateById(ID, db);
-                                
+
                                 //check if requested gate exists
                                 if (requestedGate.id == "NULL")
                                 {
@@ -267,7 +295,7 @@ namespace StargateNetwork
                                     Send("CSDialCheck:404");
                                     break;
                                 }
-                                
+
                                 //check if gate is trying to dial itself
                                 if (requestedGate.gate_address == currentGate.gate_address)
                                 {
@@ -275,7 +303,7 @@ namespace StargateNetwork
                                     Send("CSDialCheck:403");
                                     break;
                                 }
-                                
+
                                 //check if destination gate is busy
                                 if (requestedGate.gate_status != "IDLE")
                                 {
@@ -284,7 +312,7 @@ namespace StargateNetwork
                                     Send("CSValidCheck:403");
                                     break;
                                 }
-                                
+
                                 //if gate is persistent make sure the world is up and if not start it and wait for it to fully load //TODO
                                 if (requestedGate.is_persistent)
                                 {
@@ -294,11 +322,14 @@ namespace StargateNetwork
                                         Console.WriteLine("Requested gate is in closed world. starting...")
                                         //function that starts world
                                         //waits for world to start
+
+                                        //updates gate info
+                                        requestedGate = await StargateTools.FindGateByAddress(requestedAddress, db);
                                     }
                                     */
                                 }
-                                
-                                
+
+
                                 //find chev count to send to requested gate
                                 string currentGateCode = currentGate.gate_code;
                                 string requestedGateCode = requestedGate.gate_code;
@@ -322,7 +353,10 @@ namespace StargateNetwork
 
                                     case 7:
                                     {
-                                        if (requestedGateCode.Substring(0,1) == requestedAddress_full.Substring(6, 1) && requestedGateCode.Substring(0,1) != "U" && currentGateCode.Substring(0,1) != "U")
+                                        if (requestedGateCode.Substring(0, 1) ==
+                                            requestedAddress_full.Substring(6, 1) &&
+                                            requestedGateCode.Substring(0, 1) != "U" &&
+                                            currentGateCode.Substring(0, 1) != "U")
                                         {
                                             chevCount = 7;
                                         }
@@ -363,19 +397,19 @@ namespace StargateNetwork
                                     Send("CSDialCheck:403");
                                     break;
                                 }
-                                
+
                                 //update gate states on database
                                 requestedGate.gate_status = "INCOMING";
 
                                 currentGate.gate_status = "OPEN";
                                 currentGate.dialed_gate_id = requestedGate.id;
-                                
+
                                 await db.SaveChangesAsync();
-                                
+
                                 //dial gate
                                 Send("CSDialCheck:200");
                                 Send("CSDialedSessionURL:" + requestedGate.session_url);
-                                
+
                                 switch (chevCount)
                                 {
                                     case 6:
@@ -383,50 +417,68 @@ namespace StargateNetwork
                                         Sessions.SendTo("Impulse:OpenIncoming:7", requestedGate.id);
                                         break;
                                     }
-                                
+
                                     case 7:
                                     {
                                         Sessions.SendTo("Impulse:OpenIncoming:8", requestedGate.id);
                                         break;
                                     }
-                                
+
                                     case 8:
                                     {
                                         Sessions.SendTo("Impulse:OpenIncoming:9", requestedGate.id);
                                         break;
                                     }
                                 }
+
                                 Console.Write("Stargate open!");
                             }
-                            
+
                             break;
                         }
-                        
-                        //used to close wormhole on both gates
-                        case "closeWormhole":
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Exception caught during dial request: " + e.Message);
+                            Send("CSDialCheck:403");
+                            break;
+                        }
+                    }
+
+                    //used to close wormhole on both gates
+                    case "closeWormhole":
+                    {
+                        try
                         {
                             //query database for current gate
                             using (var db = new StargateContext())
                             {
                                 var currentGate = await StargateTools.FindGateById(ID, db);
-                                
+
                                 //close remote gate
                                 Console.WriteLine("Closing wormhole: " + currentGate.dialed_gate_id);
                                 Sessions.SendTo("Impulse:CloseWormhole", currentGate.dialed_gate_id);
-                                
+
                                 currentGate.dialed_gate_id = "";
                                 currentGate.gate_status = "IDLE";
                                 await db.SaveChangesAsync();
                             }
-                            
+
                             break;
                         }
-                        
-                        //used to update info about the gate on the database
-                        case "updateData":
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Exception caught during close wormhole: " + e.Message);
+                            break;
+                        }
+                    }
+
+                    //used to update info about the gate on the database
+                    case "updateData":
+                    {
+                        try
                         {
                             Console.WriteLine("Updated requested");
-                            
+
                             //find gate and update record
                             using (var db = new StargateContext())
                             {
@@ -437,24 +489,32 @@ namespace StargateNetwork
                                     Console.WriteLine("No stargate found for update. Is it registered?");
                                     break;
                                 }
-                                
+
                                 gate.active_users = message.currentUsers;
                                 gate.max_users = message.maxUsers;
                                 gate.gate_status = message.gate_status;
                                 gate.update_date = UnixTimestamp();
                                 await db.SaveChangesAsync();
-                                
+
                                 Console.WriteLine("Updated record");
                             }
-                            
+
                             break;
                         }
-                        
-                        //used to update iris state info on the server
-                        case "updateIris":
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Exception caught during update data: " + e.Message);
+                            break;
+                        }
+                    }
+
+                    //used to update iris state info on the server
+                    case "updateIris":
+                    {
+                        try
                         {
                             Console.WriteLine("Iris state: " + message.iris_state);
-                            
+
                             using (var db = new StargateContext())
                             {
                                 //set iris state in database // 
@@ -462,19 +522,25 @@ namespace StargateNetwork
                                 gate.iris_state = message.iris_state;
                                 await db.SaveChangesAsync();
 
-                                try
-                                {
-                                    Console.WriteLine("Sending iris state to dialing gate");
-                                    Stargate incomingGate = await StargateTools.FindGateByDialedId(gate.id, db);
-                                    Sessions.SendTo("IrisUpdate:" + gate.iris_state, incomingGate.id);
-                                } finally{}
-                            }   
-                            
+
+                                Console.WriteLine("Sending iris state to dialing gate");
+                                Stargate incomingGate = await StargateTools.FindGateByDialedId(gate.id, db);
+                                Sessions.SendTo("IrisUpdate:" + gate.iris_state, incomingGate.id);
+                            }
+
                             break;
                         }
-                        
-                        //keepalive
-                        case "keepAlive":
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Exception caught during update iris: " + e.Message);
+                            break;
+                        }
+                    }
+
+                    //keepalive
+                    case "keepAlive":
+                    {
+                        try
                         {
                             using (var db = new StargateContext())
                             {
@@ -482,14 +548,17 @@ namespace StargateNetwork
                                 gate.update_date = UnixTimestamp();
                                 await db.SaveChangesAsync();
                             }
+
+                            break;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Exception caught during keep alive: " + e.Message);
                             break;
                         }
                     }
                 }
-                else
-                {
-                    Console.WriteLine("Received invalid message type from client");
-                }
+                
             }
         }
 
@@ -498,55 +567,62 @@ namespace StargateNetwork
             return (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
         }
 
-        static void cleanStaleDb()
+        static void CleanStaleDb()
         {
-            while (true)
+            try
             {
-                using (var db = new StargateContext())
+                while (true)
                 {
-                    var gates = StargateTools.FindAllGates(db, true);
-
-                    foreach (var gate in gates)
+                    using (var db = new StargateContext())
                     {
-                        if (UnixTimestamp() - gate.update_date > 60)
+                        var gates = StargateTools.FindAllGates(db, true);
+
+                        foreach (var gate in gates)
                         {
-                            StargateTools.RemoveGate(gate, db);
-                        
-                            Console.WriteLine("Cleaned stale stargate from database");
+                            if (UnixTimestamp() - gate.update_date > 60)
+                            {
+                                StargateTools.RemoveGate(gate, db);
+
+                                Console.WriteLine("Cleaned stale stargate from database");
+                            }
                         }
+
+                        db.SaveChanges();
                     }
-                
-                    db.SaveChanges();
+
+                    Thread.Sleep(60000);
                 }
-            
-                Thread.Sleep(60000);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception caught when cleaning state gates: " + e.Message);
             }
         }
-        
-        
+
+
         static void Main(string[] args)
         {
             //get env vars
-            string WS_URI = Environment.GetEnvironmentVariable("WS_URI");
+            string? WS_URI = Environment.GetEnvironmentVariable("WS_URI");
             if (string.IsNullOrEmpty(WS_URI))
             {
                 WS_URI = "ws://192.168.1.14:27015";
             }
-            
+
             //start websocket server
             WebSocketServer wssv = new WebSocketServer(WS_URI);
             wssv.AddWebSocketService<Echo>("/Echo");
             wssv.Start();
             Console.WriteLine("server started on: " + WS_URI);
-            
+
             //start bunkum http server
             BunKum.StartBunKum();
-            
+
             //start database cleaner thread
-            Thread dbCleanThread = new Thread(cleanStaleDb);
+            Thread dbCleanThread = new Thread(CleanStaleDb);
             dbCleanThread.Start();
             Console.WriteLine("Db cleaner started");
-        
+
             Console.ReadKey();
             wssv.Stop();
         }
