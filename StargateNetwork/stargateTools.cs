@@ -54,7 +54,7 @@ public class StargateTools
         return gate;
     }
 
-    public static List<Stargate> FindAllGates(StargateContext ctx, bool onlyNonPersistent)
+    public static List<Stargate> FindAllGates(StargateContext ctx, bool onlyNonPersistent, bool onlyPublic=false)
     {
         List<Stargate> gates = new List<Stargate>();
         
@@ -62,6 +62,12 @@ public class StargateTools
         {
             gates = ctx.Stargates
                 .Where(b => b.is_persistent == false)
+                .ToList();
+        }
+        else if (onlyPublic)
+        {
+            gates = ctx.Stargates
+                .Where(b => b.public_gate == true)
                 .ToList();
         }
         else

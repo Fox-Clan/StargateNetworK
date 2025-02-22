@@ -108,7 +108,8 @@ namespace StargateNetwork
                                     update_date = UnixTimestamp(),
                                     dialed_gate_id = "",
                                     is_persistent = false,
-                                    world_record = ""
+                                    world_record = "",
+                                    public_gate = message.@public
                                 });
                                 await db.SaveChangesAsync();
                                 Send("{code: 200, message: \"Address accepted\" }");

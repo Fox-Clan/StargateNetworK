@@ -14,7 +14,7 @@ public class GateEndpoints : EndpointGroup
     {
         using (var db = new StargateContext())
         {
-            var gates = StargateTools.FindAllGates(db, false);
+            var gates = StargateTools.FindAllGates(db, onlyNonPersistent: false, onlyPublic: true);
             string gateList = JsonConvert.SerializeObject(gates);
             return gateList;
         }
